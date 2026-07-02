@@ -23,8 +23,8 @@
   --bg-elevated:  #161b22;  /* kort, header */
   --text:         #e6e8ec;  /* brödtext */
   --text-muted:   #9aa3b0;  /* nedtonad text */
-  --accent:       #7c6cf6;  /* accentfärg (indigo/violett) */
-  --accent-soft:  rgba(124, 108, 246, 0.12); /* genomskinlig accent för taggar m.m. */
+  --accent:       #d97a32;  /* accentfärg (bränd orange) */
+  --accent-soft:  rgba(217, 122, 50, 0.12); /* genomskinlig accent för taggar m.m. */
   --border:       #262c36;  /* tunna linjer/kanter */
   --shadow:       0 12px 32px rgba(0, 0, 0, 0.4); /* kortskugga vid hover */
 
@@ -134,7 +134,7 @@ ul {
 
 .btn--primary:hover {
   transform: translateY(-3px);                 /* lyfts lite vid hover */
-  box-shadow: 0 8px 24px rgba(124, 108, 246, 0.35);
+  box-shadow: 0 8px 24px rgba(217, 122, 50, 0.35);
   color: #fff;
 }
 
@@ -250,7 +250,7 @@ ul {
   align-items: center;
   /* Subtil radiell "glow" i accentfärg bakom innehållet */
   background:
-    radial-gradient(ellipse 60% 50% at 70% 20%, rgba(124, 108, 246, 0.12), transparent),
+    radial-gradient(ellipse 60% 50% at 70% 20%, rgba(217, 122, 50, 0.1), transparent),
     var(--bg);
 }
 
@@ -395,7 +395,7 @@ ul {
 .card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow);
-  border-color: rgba(124, 108, 246, 0.4);
+  border-color: rgba(217, 122, 50, 0.4);
 }
 
 /* Skärmdump överst i kortet. Negativa marginaler låter bilden gå
