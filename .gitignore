@@ -1,2 +1,5 @@
 # Lokala verktyg för Claude Code (förhandsgranskningsserver m.m.) — behövs inte i repot
 .claude/
+
+# Privata anteckningar — ska inte upp på GitHub
+ANTECKNINGAR.md
