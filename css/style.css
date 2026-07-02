@@ -1,0 +1,600 @@
+/* ============================================================
+   PORTFOLIO — STILMALL
+   Struktur:
+   1. Variabler & grundinställningar (tema, färger, typsnitt)
+   2. Gemensamma hjälpklasser (container, knappar, sektioner)
+   3. Header & navigation
+   4. Hero
+   5. Om mig
+   6. Projekt (kort)
+   7. Kontakt & footer
+   8. Scroll-animationer (.reveal)
+   9. Responsivitet (media queries)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. VARIABLER & GRUND
+   Alla färger ligger i variabler — vill du byta accentfärg
+   eller göra ett ljust tema räcker det att ändra här.
+   ------------------------------------------------------------ */
+:root {
+  /* Mörkt tema */
+  --bg:           #0e1116;  /* sidbakgrund */
+  --bg-elevated:  #161b22;  /* kort, header */
+  --text:         #e6e8ec;  /* brödtext */
+  --text-muted:   #9aa3b0;  /* nedtonad text */
+  --accent:       #7c6cf6;  /* accentfärg (indigo/violett) */
+  --accent-soft:  rgba(124, 108, 246, 0.12); /* genomskinlig accent för taggar m.m. */
+  --border:       #262c36;  /* tunna linjer/kanter */
+  --shadow:       0 12px 32px rgba(0, 0, 0, 0.4); /* kortskugga vid hover */
+
+  /* Typsnitt */
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-body:    "Inter", sans-serif;
+
+  /* Övergångar — samma "känsla" överallt */
+  --transition: 0.3s cubic-bezier(0.25, 0.6, 0.3, 1);
+}
+
+/* Nollställ webbläsarens standardmarginal/padding */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;      /* mjuk scroll vid ankarlänkar (#projects osv.) */
+  scroll-padding-top: 5rem;     /* kompensera för den fasta headern */
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+ul {
+  list-style: none;
+}
+
+/* Accentfärgad text, t.ex. punkten efter namnet */
+.accent {
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------
+   2. GEMENSAMMA HJÄLPKLASSER
+   ------------------------------------------------------------ */
+
+/* Centrerad innehållscontainer med maxbredd */
+.container {
+  width: min(1080px, 90%);
+  margin-inline: auto;
+}
+
+/* Varje sektion får rejält med luft ovanför/under */
+.section {
+  padding-block: 7rem;
+}
+
+.section__title {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  margin-bottom: 1rem;
+}
+
+/* Dekorativ linje efter sektionsrubriker */
+.section__title::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 4px;
+  margin-top: 0.75rem;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.section__subtitle {
+  color: var(--text-muted);
+  margin-bottom: 3rem;
+  max-width: 55ch;
+}
+
+/* --- Knappar --- */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform var(--transition), box-shadow var(--transition),
+              background-color var(--transition), color var(--transition);
+}
+
+/* Primär knapp: fylld med accentfärg */
+.btn--primary {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  transform: translateY(-3px);                 /* lyfts lite vid hover */
+  box-shadow: 0 8px 24px rgba(124, 108, 246, 0.35);
+  color: #fff;
+}
+
+/* Ghost-knapp: bara en kant, fylls vid hover */
+.btn--ghost {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn--ghost:hover {
+  background-color: var(--accent-soft);
+  transform: translateY(-3px);
+}
+
+/* ------------------------------------------------------------
+   3. HEADER & NAVIGATION
+   ------------------------------------------------------------ */
+.site-header {
+  position: fixed;              /* ligger kvar i toppen vid scroll */
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding-block: 1.1rem;
+  transition: background-color var(--transition), box-shadow var(--transition),
+              padding var(--transition);
+}
+
+/* Klassen .scrolled sätts av JS när sidan scrollats en bit:
+   headern får då bakgrund, skugga och blir lite kompaktare */
+.site-header.scrolled {
+  background-color: rgba(22, 27, 34, 0.85);
+  backdrop-filter: blur(12px);  /* frostat glas-effekt */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  padding-block: 0.7rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav__logo {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.nav__logo:hover {
+  color: var(--accent);
+}
+
+.nav__menu {
+  display: flex;
+  gap: 2.2rem;
+}
+
+.nav__link {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 500;
+  position: relative;
+}
+
+/* Understrykning som "växer ut" vid hover */
+.nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 100%;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition);
+}
+
+.nav__link:hover {
+  color: var(--text);
+}
+
+.nav__link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Hamburgarknappen är dold på desktop (visas i media query) */
+.nav__toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.nav__toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+/* ------------------------------------------------------------
+   4. HERO
+   ------------------------------------------------------------ */
+.hero {
+  min-height: 100vh;            /* fyller hela skärmen */
+  display: flex;
+  align-items: center;
+  /* Subtil radiell "glow" i accentfärg bakom innehållet */
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 20%, rgba(124, 108, 246, 0.12), transparent),
+    var(--bg);
+}
+
+.hero__greeting {
+  color: var(--accent);
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  margin-bottom: 0.8rem;
+}
+
+.hero__name {
+  font-size: clamp(2.6rem, 8vw, 4.5rem);
+  margin-bottom: 0.3rem;
+}
+
+.hero__tagline {
+  font-size: clamp(1.6rem, 5vw, 2.8rem);
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.hero__intro {
+  max-width: 54ch;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+}
+
+.hero__intro strong {
+  color: var(--text);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;              /* knapparna radbryts på små skärmar */
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.hero__socials {
+  display: flex;
+  gap: 1.4rem;
+}
+
+.hero__socials a {
+  color: var(--text-muted);
+  transition: color var(--transition), transform var(--transition);
+}
+
+.hero__socials a:hover {
+  color: var(--accent);
+  transform: translateY(-3px);
+}
+
+/* Hero-innehållet animeras in vid sidladdning (en gång, ingen scroll krävs) */
+.hero__content > * {
+  animation: hero-in 0.7s cubic-bezier(0.25, 0.6, 0.3, 1) both;
+}
+
+/* Varje barn får en liten fördröjning => trappstegseffekt */
+.hero__content > *:nth-child(1) { animation-delay: 0.1s; }
+.hero__content > *:nth-child(2) { animation-delay: 0.2s; }
+.hero__content > *:nth-child(3) { animation-delay: 0.3s; }
+.hero__content > *:nth-child(4) { animation-delay: 0.4s; }
+.hero__content > *:nth-child(5) { animation-delay: 0.5s; }
+.hero__content > *:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ------------------------------------------------------------
+   5. OM MIG
+   ------------------------------------------------------------ */
+.about__grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;   /* text till vänster, kompetenser till höger */
+  gap: 4rem;
+  align-items: start;
+}
+
+.about__text p {
+  color: var(--text-muted);
+  margin-bottom: 1.2rem;
+}
+
+.about__skills h3 {
+  font-size: 1.05rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Kompetenser som små "pills" i två kolumner */
+.skills-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+}
+
+.skills-list li {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+/* Accentfärgad pil framför varje kompetens */
+.skills-list li::before {
+  content: "▸";
+  color: var(--accent);
+  position: absolute;
+  left: 0;
+}
+
+/* ------------------------------------------------------------
+   6. PROJEKT
+   ------------------------------------------------------------ */
+.projects__grid {
+  display: grid;
+  /* auto-fit + minmax = korten radbryts automatiskt efter skärmbredd */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition), box-shadow var(--transition),
+              border-color var(--transition);
+}
+
+/* Hover: kortet lyfts, får skugga och accentfärgad kant */
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow);
+  border-color: rgba(124, 108, 246, 0.4);
+}
+
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.4rem;
+}
+
+.card__icon {
+  color: var(--accent);
+}
+
+.card__links {
+  display: flex;
+  gap: 0.9rem;
+}
+
+.card__links a {
+  color: var(--text-muted);
+}
+
+.card__links a:hover {
+  color: var(--accent);
+}
+
+.card__title {
+  font-size: 1.25rem;
+  margin-bottom: 0.6rem;
+  transition: color var(--transition);
+}
+
+/* Rubriken byter färg när man hovrar över hela kortet */
+.card:hover .card__title {
+  color: var(--accent);
+}
+
+.card__desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  flex-grow: 1;                 /* trycker ner taggarna till kortets botten */
+  margin-bottom: 1.4rem;
+}
+
+/* Tech-taggar (C#, Blazor, PHP osv.) */
+.card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.card__tags li {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent);
+  background-color: var(--accent-soft);
+  padding: 0.25rem 0.7rem;
+  border-radius: 99px;          /* helt rundade "pills" */
+}
+
+/* ------------------------------------------------------------
+   7. KONTAKT & FOOTER
+   ------------------------------------------------------------ */
+.contact {
+  text-align: center;
+}
+
+/* Centrera den dekorativa linjen under rubriken i denna sektion */
+.contact .section__title::after {
+  margin-inline: auto;
+}
+
+.contact__text {
+  color: var(--text-muted);
+  max-width: 46ch;
+  margin: 0 auto 2.5rem;
+}
+
+.contact__socials {
+  display: flex;
+  justify-content: center;
+  gap: 1.8rem;
+  margin-top: 3rem;
+}
+
+.contact__socials a {
+  color: var(--text-muted);
+  transition: color var(--transition), transform var(--transition);
+}
+
+.contact__socials a:hover {
+  color: var(--accent);
+  transform: translateY(-3px) scale(1.1);
+}
+
+.site-footer {
+  text-align: center;
+  padding-block: 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ------------------------------------------------------------
+   8. SCROLL-ANIMATIONER
+   Element med klassen .reveal börjar osynliga och nedflyttade.
+   När IntersectionObserver (js/main.js) ser att elementet är i
+   vy läggs klassen .visible på => elementet fade:ar/slide:ar in.
+   --delay (sätts inline i HTML) förskjuter animationen så att
+   t.ex. projektkorten kommer in ett i taget.
+   ------------------------------------------------------------ */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.6s ease-out var(--delay, 0s),
+              transform 0.6s cubic-bezier(0.25, 0.6, 0.3, 1) var(--delay, 0s);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Respektera användare som stängt av animationer i sitt OS */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .hero__content > * {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   9. RESPONSIVITET
+   ------------------------------------------------------------ */
+
+/* Surfplatta och mindre */
+@media (max-width: 820px) {
+  .about__grid {
+    grid-template-columns: 1fr;   /* stapla text och kompetenser */
+    gap: 2.5rem;
+  }
+
+  .section {
+    padding-block: 5rem;
+  }
+}
+
+/* Mobil */
+@media (max-width: 640px) {
+  /* Visa hamburgarknappen... */
+  .nav__toggle {
+    display: flex;
+  }
+
+  /* ...och göm menyn i en panel som fälls ned under headern */
+  .nav__menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 5.5rem 2rem 2rem;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: var(--bg-elevated);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    /* Dold som standard: skjuts upp utanför skärmen */
+    transform: translateY(-110%);
+    transition: transform var(--transition);
+    z-index: -1;                  /* bakom headerns logga/knapp */
+  }
+
+  /* Klassen .open sätts av JS när man trycker på hamburgaren */
+  .nav__menu.open {
+    transform: translateY(0);
+  }
+
+  /* Hamburgare => kryss när menyn är öppen */
+  .nav__toggle.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav__toggle.open span:nth-child(2) {
+    opacity: 0;
+  }
+  .nav__toggle.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .skills-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
